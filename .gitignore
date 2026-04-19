@@ -1,0 +1,23 @@
+# Dataset and extracted images
+data/
+
+# Model checkpoints and weights
+checkpoints/
+
+# Python compiled files
+__pycache__/
+*.pyc
+
+# Local environments
+.env
+venv/
+env/
+.venv/
+
+# IDE/OS files
+.DS_Store
+.vscode/
+.idea/
+
+# Streamlit specific
+.streamlit/

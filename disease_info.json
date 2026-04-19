@@ -1,0 +1,52 @@
+{
+    "Tomato___Bacterial_spot": {
+        "disease_name": "Bacterial Spot",
+        "description": "Bacterial spot is caused by Xanthomonas bacteria and leads to small, dark, water-soaked spots on leaves that may turn yellow and fall off. It spreads rapidly in warm, humid conditions through rain splash and contaminated tools.",
+        "recommendation": "Remove and destroy infected leaves immediately. Apply copper-based fungicide spray every 7-10 days. Avoid overhead watering and ensure good air circulation between plants. Use disease-free seeds and rotate crops every 2-3 years."
+    },
+    "Tomato___Early_blight": {
+        "disease_name": "Early Blight",
+        "description": "Early blight is caused by the fungus Alternaria solani and shows up as dark brown spots with concentric rings (target-like pattern) on older leaves first. The disease can cause significant leaf drop and reduce fruit yield if not treated promptly.",
+        "recommendation": "Remove and burn affected lower leaves to slow the spread. Apply a neem oil spray or mancozeb fungicide every 7 days during the growing season. Mulch around the base of plants to prevent soil splash, and ensure plants are well-spaced for good airflow."
+    },
+    "Tomato___Late_blight": {
+        "disease_name": "Late Blight",
+        "description": "Late blight is a devastating disease caused by the oomycete Phytophthora infestans that creates large, irregular, water-soaked grey-green patches on leaves. It can destroy an entire tomato crop within days in cool, wet weather conditions.",
+        "recommendation": "Act immediately by removing and destroying all infected plant parts. Apply metalaxyl-based or copper-based fungicide spray right away. Avoid watering in the evening and ensure good drainage. Consider planting resistant varieties in the next season."
+    },
+    "Tomato___Leaf_Mold": {
+        "disease_name": "Leaf Mold",
+        "description": "Leaf mold is caused by the fungus Passalora fulva and appears as pale green to yellow spots on the upper leaf surface with olive-green to brown fuzzy mold on the underside. It thrives in high humidity, especially in greenhouse conditions.",
+        "recommendation": "Improve ventilation around plants by pruning lower leaves and spacing plants properly. Reduce humidity by watering at the soil level and not on leaves. Apply copper fungicide or neem oil spray every 7-10 days. Remove severely infected leaves."
+    },
+    "Tomato___Septoria_leaf_spot": {
+        "disease_name": "Septoria Leaf Spot",
+        "description": "Septoria leaf spot is caused by the fungus Septoria lycopersici and appears as many small, circular spots with dark borders and light grey centers on lower leaves. The disease progresses upward through the plant and can cause severe defoliation.",
+        "recommendation": "Remove infected lower leaves as soon as spots appear. Apply chlorothalonil or copper-based fungicide spray every 7-10 days. Avoid working with wet plants. Mulch around the base to prevent soil splash and practice crop rotation with non-solanaceous crops."
+    },
+    "Tomato___Spider_mites Two-spotted_spider_mite": {
+        "disease_name": "Spider Mites (Two-spotted)",
+        "description": "Two-spotted spider mites are tiny pests that suck sap from the undersides of leaves, causing yellow stippling and fine webbing. Leaves may turn bronze or brown and drop off during severe infestations, particularly in hot, dry conditions.",
+        "recommendation": "Spray affected plants forcefully with water to knock off mites. Apply neem oil or insecticidal soap spray every 5-7 days, covering the undersides of leaves. Introduce natural predators like ladybugs if available. Increase humidity around plants by misting."
+    },
+    "Tomato___Target_Spot": {
+        "disease_name": "Target Spot",
+        "description": "Target spot is caused by the fungus Corynespora cassiicola and produces brown circular lesions with concentric rings on leaves, stems, and fruit. It spreads quickly in warm, humid weather and can reduce yield significantly.",
+        "recommendation": "Remove and destroy infected leaves and fallen debris. Apply mancozeb or copper-based fungicide spray every 7 days. Improve air circulation by staking plants and proper spacing. Avoid overhead irrigation and practice crop rotation."
+    },
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+        "disease_name": "Tomato Yellow Leaf Curl Virus",
+        "description": "Tomato yellow leaf curl virus (TYLCV) is transmitted by whiteflies and causes leaves to curl upward, turn yellow at the edges, and become small and crumpled. Infected plants are stunted and produce very few fruits.",
+        "recommendation": "There is no cure for this virus, so remove and destroy infected plants immediately to prevent spread. Control whiteflies with yellow sticky traps and neem oil sprays. Use reflective mulches to repel whiteflies. Plant TYLCV-resistant tomato varieties in the next season."
+    },
+    "Tomato___Tomato_mosaic_virus": {
+        "disease_name": "Tomato Mosaic Virus",
+        "description": "Tomato mosaic virus causes a mosaic pattern of light and dark green patches on leaves, along with leaf curling and distortion. The virus spreads through contaminated seeds, tools, and hands, and can survive in soil for years.",
+        "recommendation": "Remove and destroy all infected plants immediately. Wash hands with soap and disinfect all garden tools with a 10% bleach solution. Do not plant tomatoes in the same spot for at least 2 years. Use certified virus-free seeds and resistant varieties."
+    },
+    "Tomato___healthy": {
+        "disease_name": "Healthy",
+        "description": "This tomato leaf appears healthy with no visible signs of disease or pest damage. The leaf shows normal green coloring and structure, indicating the plant is in good condition.",
+        "recommendation": "Continue with your current care routine. Water plants at the base in the morning, apply balanced fertilizer every 2-3 weeks, and inspect leaves regularly for any early signs of disease. Ensure good air circulation and practice preventive spraying with neem oil once every 2 weeks."
+    }
+}

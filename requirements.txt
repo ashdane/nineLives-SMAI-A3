@@ -1,0 +1,9 @@
+torch
+torchvision
+timm
+streamlit
+pillow
+matplotlib
+numpy
+datasets
+scikit-learn
