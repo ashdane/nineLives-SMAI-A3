@@ -91,7 +91,7 @@ def evaluate(model, loader, criterion, device):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_dir", default="data/tomato")
-    parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--output_dir", default="checkpoints")
@@ -132,8 +132,8 @@ def main():
     best_acc = 0.0
 
     for epoch in range(1, args.epochs + 1):
-        # unfreeze backbone after epoch 2
-        if epoch == 3:
+        # unfreeze backbone after epoch 1
+        if epoch == 2:
             for p in model.parameters():
                 p.requires_grad = True
             optimizer = torch.optim.Adam(model.parameters(), lr=args.lr * 0.1, weight_decay=1e-4)

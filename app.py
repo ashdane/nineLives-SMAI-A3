@@ -1,5 +1,6 @@
 import os
 import json
+import math
 import streamlit as st
 import torch
 import timm
@@ -72,6 +73,12 @@ def do_prediction(model, tensor_img, classes):
         out = model(tensor_img)
         probs = torch.softmax(out, dim=1).squeeze()
 
+    # Compute entropy of the full distribution (higher = more uncertain)
+    entropy = -torch.sum(probs * torch.log(probs + 1e-9)).item()
+    # Normalize to [0, 1] range (max entropy = log(num_classes))
+    max_entropy = math.log(len(classes))
+    norm_entropy = entropy / max_entropy
+
     top_p, top_class_idx = probs.topk(5)
     
     res = []
@@ -79,7 +86,7 @@ def do_prediction(model, tensor_img, classes):
         idx = top_class_idx[i].item()
         res.append((classes[idx], top_p[i].item()))
         
-    return res
+    return res, norm_entropy
 
 def main():
     st.title("🍅 Tomato Leaf Disease Detector")
@@ -101,16 +108,26 @@ def main():
         col1, col2 = st.columns([1, 1])
 
         with col1:
-            st.image(img, caption="Your Uploaded Image", use_container_width=True)
+            st.image(img, caption="Your Uploaded Image", width="stretch")
 
         with col2:
             st.write("### Prediction Results")
             tensor_img = preprocess_image(img)
-            preds = do_prediction(model, tensor_img, class_names)
+            preds, norm_entropy = do_prediction(model, tensor_img, class_names)
             
             top_disease, top_prob = preds[0]
             is_healthy = "healthy" in top_disease.lower()
             
+            # Out-of-distribution check using prediction entropy
+            # High entropy = predictions spread across many classes = likely not a valid leaf
+            if norm_entropy > 0.65:
+                st.warning(
+                    "⚠️ **This may not be a valid tomato leaf image.** "
+                    "The model's predictions are spread across many classes, "
+                    "which suggests the input doesn't clearly match any known disease. "
+                    "Please upload a clear photo of a tomato leaf for reliable results."
+                )
+
             info = disease_info.get(top_disease, {})
             pretty_name = info.get("disease_name", str(top_disease))
             
