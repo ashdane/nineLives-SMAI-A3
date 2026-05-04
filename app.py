@@ -47,12 +47,12 @@ def load_clip_gate():
 
 def is_tomato_leaf(clip_model, clip_processor, image):
     """
-    Zero-shot check: is this image a tomato/plant leaf?
-    Returns (bool, float) — whether it passed the gate and the leaf probability.
+    Zero-shot check: is this image specifically a tomato leaf?
+    Returns (bool, float) — whether it passed the gate and the tomato-leaf probability.
     """
     candidate_labels = [
-        "a photo of a tomato plant leaf",
-        "a photo of a plant leaf with disease spots",
+        "a photo of a tomato plant leaf, with or without disease",
+        "a photo of a non-tomato plant leaf such as banana, papaya, mango, or grape leaf",
         "a photo of something that is not a plant leaf, such as a notebook, person, animal, or object",
     ]
 
@@ -69,9 +69,9 @@ def is_tomato_leaf(clip_model, clip_processor, image):
 
     probs = logits.softmax(dim=0)
 
-    # Combine the two leaf-related labels as "leaf probability"
-    leaf_prob = (probs[0] + probs[1]).item()
-    return leaf_prob > 0.20, leaf_prob
+    # Only the first label (tomato leaf) counts as passing the gate
+    tomato_leaf_prob = probs[0].item()
+    return tomato_leaf_prob > 0.20, tomato_leaf_prob
 
 # ─── Stage 2: Disease classifier ────────────────────────────────────────────
 
