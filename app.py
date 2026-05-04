@@ -1,11 +1,11 @@
 import os
 import json
-import math
 import streamlit as st
 import torch
 import timm
 from PIL import Image
 from torchvision import transforms
+from transformers import CLIPProcessor, CLIPModel
 
 # Set paths
 BASE_DIR = os.path.dirname(__file__)
@@ -34,6 +34,46 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+# ─── Stage 1: CLIP-based leaf gate ──────────────────────────────────────────
+
+@st.cache_resource
+def load_clip_gate():
+    """Load a pre-trained CLIP model for zero-shot tomato-leaf verification."""
+    clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+    clip_model.eval()
+    return clip_model, clip_processor
+
+def is_tomato_leaf(clip_model, clip_processor, image):
+    """
+    Zero-shot check: is this image a tomato/plant leaf?
+    Returns (bool, float) — whether it passed the gate and the leaf probability.
+    """
+    candidate_labels = [
+        "a photo of a tomato plant leaf",
+        "a photo of a plant leaf with disease spots",
+        "a photo of something that is not a plant leaf, such as a notebook, person, animal, or object",
+    ]
+
+    inputs = clip_processor(
+        text=candidate_labels,
+        images=image,
+        return_tensors="pt",
+        padding=True,
+    )
+
+    with torch.no_grad():
+        outputs = clip_model(**inputs)
+        logits = outputs.logits_per_image.squeeze()  # shape: [3]
+
+    probs = logits.softmax(dim=0)
+
+    # Combine the two leaf-related labels as "leaf probability"
+    leaf_prob = (probs[0] + probs[1]).item()
+    return leaf_prob > 0.20, leaf_prob
+
+# ─── Stage 2: Disease classifier ────────────────────────────────────────────
 
 @st.cache_resource
 def load_trained_model():
@@ -73,12 +113,6 @@ def do_prediction(model, tensor_img, classes):
         out = model(tensor_img)
         probs = torch.softmax(out, dim=1).squeeze()
 
-    # Compute entropy of the full distribution (higher = more uncertain)
-    entropy = -torch.sum(probs * torch.log(probs + 1e-9)).item()
-    # Normalize to [0, 1] range (max entropy = log(num_classes))
-    max_entropy = math.log(len(classes))
-    norm_entropy = entropy / max_entropy
-
     top_p, top_class_idx = probs.topk(5)
     
     res = []
@@ -86,7 +120,9 @@ def do_prediction(model, tensor_img, classes):
         idx = top_class_idx[i].item()
         res.append((classes[idx], top_p[i].item()))
         
-    return res, norm_entropy
+    return res
+
+# ─── Streamlit UI ────────────────────────────────────────────────────────────
 
 def main():
     st.title("🍅 Tomato Leaf Disease Detector")
@@ -96,7 +132,11 @@ def main():
         st.header("Info")
         st.write("This app uses a trained EfficientNet-B0 model to predict diseases from the PlantVillage dataset.")
         st.write("Classes supported include Early Blight, Late Blight, Leaf Mold, and more.")
+        st.markdown("---")
+        st.caption("A CLIP model is used to first verify that the uploaded image is a tomato leaf before running the disease classifier.")
 
+    # Load both models
+    clip_model, clip_processor = load_clip_gate()
     model, class_names = load_trained_model()
     disease_info = get_disease_info()
 
@@ -112,21 +152,25 @@ def main():
 
         with col2:
             st.write("### Prediction Results")
+
+            # ── Stage 1: Leaf verification ──
+            with st.spinner("Verifying image..."):
+                passed_gate, leaf_prob = is_tomato_leaf(clip_model, clip_processor, img)
+
+            if not passed_gate:
+                st.error(
+                    "🚫 **This does not appear to be a tomato leaf.**\n\n"
+                    f"Leaf confidence: {leaf_prob:.0%}\n\n"
+                    "Please upload a clear photo of a tomato leaf for disease diagnosis."
+                )
+                st.stop()
+
+            # ── Stage 2: Disease classification ──
             tensor_img = preprocess_image(img)
-            preds, norm_entropy = do_prediction(model, tensor_img, class_names)
+            preds = do_prediction(model, tensor_img, class_names)
             
             top_disease, top_prob = preds[0]
             is_healthy = "healthy" in top_disease.lower()
-            
-            # Out-of-distribution check using prediction entropy
-            # High entropy = predictions spread across many classes = likely not a valid leaf
-            if norm_entropy > 0.65:
-                st.warning(
-                    "⚠️ **This may not be a valid tomato leaf image.** "
-                    "The model's predictions are spread across many classes, "
-                    "which suggests the input doesn't clearly match any known disease. "
-                    "Please upload a clear photo of a tomato leaf for reliable results."
-                )
 
             info = disease_info.get(top_disease, {})
             pretty_name = info.get("disease_name", str(top_disease))
