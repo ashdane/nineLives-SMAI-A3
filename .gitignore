@@ -1,8 +1,7 @@
 # Dataset and extracted images
 data/
 
-# Model checkpoints and weights
-checkpoints/
+
 
 # Python compiled files
 __pycache__/
