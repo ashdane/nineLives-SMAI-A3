@@ -244,7 +244,7 @@ def main():
     if "prev_upload_name" not in st.session_state:
         st.session_state.prev_upload_name = None
 
-    st.title("🍅 Tomato Leaf Disease Detector")
+    st.title(" Tomato Leaf Disease Detector")
     st.write("Upload a picture of a tomato leaf to see what disease it has (or if it is healthy).")
 
     with st.sidebar:
