@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = BASE_DIR / "checkpoints"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
